@@ -1,21 +1,22 @@
 import React, { useState } from 'react';
 import {
   View,
-  Text,
   StyleSheet,
   Button,
   TouchableWithoutFeedback,
   Keyboard,
-  Alert,
+  Alert
 } from 'react-native';
 
-import Card from '../componenets/Card';
-import Color from '../constants/Color';
-import Input from '../componenets/Input';
-import NumberContainer from '../componenets/NumberContainer'
+import Card from '../components/Card';
+import Input from '../components/Input';
+import NumberContainer from '../components/NumberContainer';
+import BodyText from '../components/BodyText';
+import TitleText from '../components/TitleText';
+import MainButton from '../components/MainButton';
+import Colors from '../constants/colors';
 
-const GameScreen = (props) => {
-
+const StartGameScreen = props => {
   const [enteredValue, setEnteredValue] = useState('');
   const [confirmed, setConfirmed] = useState(false);
   const [selectedNumber, setSelectedNumber] = useState();
@@ -24,41 +25,40 @@ const GameScreen = (props) => {
     setEnteredValue(inputText.replace(/[^0-9]/g, ''));
   };
 
-  const restInputHandler = () => {
-    setEnteredValue('')
-    setConfirmed(false)
+  const resetInputHandler = () => {
+    setEnteredValue('');
+    setConfirmed(false);
   };
-
 
   const confirmInputHandler = () => {
     const chosenNumber = parseInt(enteredValue);
     if (isNaN(chosenNumber) || chosenNumber <= 0 || chosenNumber > 99) {
-      Alert.alert('Invalid Number', 'Number has to be a number between 1 and 99.', [{ text: 'Okay', style: 'destructive', onPress: restInputHandler }]);
+      Alert.alert(
+        'Invalid number!',
+        'Number has to be a number between 1 and 99.',
+        [{ text: 'Okay', style: 'destructive', onPress: resetInputHandler }]
+      );
       return;
-
     }
-    setConfirmed(true)
+    setConfirmed(true);
     setSelectedNumber(chosenNumber);
     setEnteredValue('');
     Keyboard.dismiss();
-
-
   };
-
 
   let confirmedOutput;
 
   if (confirmed) {
     confirmedOutput = (
       <Card style={styles.summaryContainer}>
-        <Text>Chosen Number</Text>
+        <BodyText>You selected</BodyText>
         <NumberContainer>{selectedNumber}</NumberContainer>
-        <Button title="START GAME" onPress={() => props.onStartGame(selectedNumber)} />
+        <MainButton onPress={() => props.onStartGame(selectedNumber)}>
+          START GAME
+        </MainButton>
       </Card>
     );
   }
-
-
 
   return (
     <TouchableWithoutFeedback
@@ -66,10 +66,10 @@ const GameScreen = (props) => {
         Keyboard.dismiss();
       }}
     >
-      <View style={styles.Screen}>
-        <Text style={styles.title}> Start a New Game </Text>
-        <Card style={styles.inputContinner}>
-          <Text> Select a Number</Text>
+      <View style={styles.screen}>
+        <TitleText style={styles.title}>Start a New Game!</TitleText>
+        <Card style={styles.inputContainer}>
+          <BodyText>Select a Number</BodyText>
           <Input
             style={styles.input}
             blurOnSubmit
@@ -80,12 +80,20 @@ const GameScreen = (props) => {
             onChangeText={numberInputHandler}
             value={enteredValue}
           />
-          <View style={styles.buttoncontiner}>
+          <View style={styles.buttonContainer}>
             <View style={styles.button}>
-              <Button title="Rest" onPress={restInputHandler} color={Color.accent} />
+              <Button
+                title="Reset"
+                onPress={resetInputHandler}
+                color={Colors.accent}
+              />
             </View>
             <View style={styles.button}>
-              <Button title="Confirm" onPress={confirmInputHandler} color={Color.primary} />
+              <Button
+                title="Confirm"
+                onPress={confirmInputHandler}
+                color={Colors.primary}
+              />
             </View>
           </View>
         </Card>
@@ -96,42 +104,38 @@ const GameScreen = (props) => {
 };
 
 const styles = StyleSheet.create({
-  Screen: {
+  screen: {
+    flex: 1,
     padding: 10,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: 'center'
   },
-
   title: {
     fontSize: 20,
     marginVertical: 10,
+    fontFamily: 'open-sans-bold'
   },
-
-  inputContinner: {
+  inputContainer: {
     width: 300,
     maxWidth: '80%',
-    alignItems: 'center',
+    alignItems: 'center'
   },
-
-  buttoncontiner: {
+  buttonContainer: {
     flexDirection: 'row',
     width: '100%',
     justifyContent: 'space-between',
-    paddingHorizontal: 15,
+    paddingHorizontal: 15
   },
   button: {
-    width: 90,
+    width: 100
   },
-
   input: {
-    width: 90,
+    width: 50,
+    textAlign: 'center'
   },
   summaryContainer: {
-    backgroundColor: '#e2f1f8',
     marginTop: 20,
     alignItems: 'center'
-
-  },
+  }
 });
 
-export default GameScreen;
+export default StartGameScreen;
