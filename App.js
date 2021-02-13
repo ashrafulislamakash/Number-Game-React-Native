@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, View, StatusBar } from 'react-native';
 
 import Header from './components//Header';
 import StartGameScreen from './screens/StartGameScreen';
@@ -43,6 +43,10 @@ export default function App() {
 
   return (
     <View style={styles.screen}>
+      <StatusBar
+        animated={true}
+        backgroundColor="#607d8b" />
+
       <Header title="Guess a Number" />
       {content}
     </View>
